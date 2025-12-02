@@ -59,18 +59,6 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .badge {
-            display: inline-block;
-            padding: 6px 16px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 50px;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            margin-bottom: 1.5rem;
-            color: var(--lstm-color);
-        }
-
         h1 {
             font-size: 3.5rem;
             line-height: 1.1;
@@ -249,12 +237,11 @@
 
     <header>
         <div class="fade-in">
-            <span class="badge">Day 2 of 31: Research Challenge</span>
             <h1>From Sequences <br>to Transformers</h1>
             <p class="subtitle">A controlled comparative study of LSTM vs. BERT on 50,000 Amazon Fine Food Reviews. Where does speed meet accuracy?</p>
             
             <div class="btn-group">
-                <a href="docs/Khan_et_al_2025_Sentiment.pdf" target="_blank" class="btn btn-primary">
+                <a href="https://journals.cfrit.com/index.php/ijisct/article/view/139" target="_blank" class="btn btn-primary">
                     <i class="fas fa-file-pdf"></i> Read Paper
                 </a>
                 <a href="https://github.com/YOUR_USERNAME/BERT-vs-LSTM-Sentiment" class="btn btn-glass">
@@ -308,7 +295,7 @@
                 </div>
 
                 <div class="chat-box">
-                    [cite_start]<div style="font-size: 0.8rem; color: #fbbf24; margin-bottom: 5px; font-weight: 700;">THE SARCASM TEST [cite: 1327]</div>
+                    <div style="font-size: 0.8rem; color: #fbbf24; margin-bottom: 5px; font-weight: 700;">THE SARCASM TEST</div>
                     <div class="review-text">"Just what I needed... a broken lid."</div>
                     <div class="prediction">
                         <span style="color: var(--lstm-color)"><i class="fas fa-times-circle"></i> LSTM: Positive</span>
@@ -318,7 +305,7 @@
             </div>
 
             <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
-                [cite_start]<h3 style="text-align: center; margin-bottom: 1rem;">The Deployment Trade-off [cite: 1358]</h3>
+                <h3 style="text-align: center; margin-bottom: 1rem;">The Deployment Trade-off</h3>
                 <div style="height: 300px;">
                     <canvas id="radarChart"></canvas>
                 </div>
@@ -336,14 +323,14 @@
             <div class="card arch-card">
                 <span class="model-tag tag-lstm">Sequential</span>
                 <h3>LSTM Workflow</h3>
-                [cite_start]<p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Step-by-step processing [cite: 1165]</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Step-by-step processing</p>
                 <img src="assets/fig3_lstm_workflow.png" alt="LSTM Diagram" class="arch-img">
             </div>
 
             <div class="card arch-card">
                 <span class="model-tag tag-bert">Attention</span>
                 <h3>BERT Workflow</h3>
-                [cite_start]<p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Bidirectional Context [cite: 1215]</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Bidirectional Context</p>
                 <img src="assets/fig4_bert_workflow.png" alt="BERT Diagram" class="arch-img">
             </div>
 
