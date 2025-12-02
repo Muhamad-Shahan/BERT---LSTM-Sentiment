@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Khan"
+    given-names: "Mohammad Arbi"
+  - family-names: "Khalid"
+    given-names: "Afsheen"
+  - family-names: "Ibad"
+    given-names: "Muhammad Shahan"
+  - family-names: "Khan"
+    given-names: "Dilawar"
+  - family-names: "Malik"
+    given-names: "Fazal"
+title: "From Sequences to Transformers: LSTM and BERT Powering Next-Gen Sentiment Analysis"
+version: 1.0.0
+date-released: 2025-01-01
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Khan"
+      given-names: "Mohammad Arbi"
+    - family-names: "Khalid"
+      given-names: "Afsheen"
+    - family-names: "Ibad"
+      given-names: "Muhammad Shahan"
+    - family-names: "Khan"
+      given-names: "Dilawar"
+    - family-names: "Malik"
+      given-names: "Fazal"
+  journal: "International Journal of Information Security and Cybercrime Technology"
+  title: "From Sequences to Transformers: LSTM and BERT Powering Next-Gen Sentiment Analysis"
+  year: 2025
