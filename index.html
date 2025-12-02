@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequences to Transformers | Research Showcase</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --lstm-color: #06b6d4; /* Cyan */
+            --bert-color: #f43f5e; /* Rose */
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        /* --- RESET & BASE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; transition: 0.3s; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        /* --- HERO SECTION --- */
+        header {
+            position: relative;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--dark-bg) 70%);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            color: var(--lstm-color);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--bert-color), #be123c);
+            color: white;
+            box-shadow: 0 10px 20px -10px rgba(244, 63, 94, 0.5);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 25px -10px rgba(244, 63, 94, 0.6); }
+
+        .btn-glass {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-glass:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); }
+
+        /* --- MAIN CONTAINER --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* --- CARDS & GRIDS --- */
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+        }
+        .section-title span { color: var(--bert-color); }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-5px); }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: stretch;
+        }
+
+        /* --- COMPARISON STATS --- */
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat-row:last-child { border-bottom: none; }
+        
+        .stat-label { font-weight: 600; color: var(--text-muted); }
+        
+        .stat-bars {
+            flex-grow: 1;
+            margin: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .bar-container {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .bar-fill { height: 100%; border-radius: 4px; }
+        .fill-lstm { background: var(--lstm-color); }
+        .fill-bert { background: var(--bert-color); }
+
+        .stat-value { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+        .val-lstm { color: var(--lstm-color); }
+        .val-bert { color: var(--bert-color); }
+
+        /* --- ARCHITECTURE --- */
+        .arch-card {
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .arch-img {
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .model-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .tag-lstm { background: rgba(6, 182, 212, 0.2); color: var(--lstm-color); }
+        .tag-bert { background: rgba(244, 63, 94, 0.2); color: var(--bert-color); }
+
+        /* --- SARCASM EXAMPLE --- */
+        .chat-box {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-family: 'Outfit', sans-serif;
+        }
+        .review-text {
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: white;
+            border-left: 3px solid #fbbf24;
+            padding-left: 15px;
+        }
+        .prediction {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="fade-in">
+            <span class="badge">Day 2 of 31: Research Challenge</span>
+            <h1>From Sequences <br>to Transformers</h1>
+            <p class="subtitle">A controlled comparative study of LSTM vs. BERT on 50,000 Amazon Fine Food Reviews. Where does speed meet accuracy?</p>
+            
+            <div class="btn-group">
+                <a href="docs/Khan_et_al_2025_Sentiment.pdf" target="_blank" class="btn btn-primary">
+                    <i class="fas fa-file-pdf"></i> Read Paper
+                </a>
+                <a href="https://github.com/YOUR_USERNAME/BERT-vs-LSTM-Sentiment" class="btn btn-glass">
+                    <i class="fab fa-github"></i> View Code
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">The Performance <span>Gap</span></h2>
+        
+        <div class="grid-2 fade-in delay-1">
+            <div class="card">
+                <h3 style="margin-bottom: 1.5rem;">Head-to-Head Metrics</h3>
+                
+                <div class="stat-row">
+                    <div class="stat-label">Accuracy</div>
+                    <div class="stat-bars">
+                        <div class="bar-container"><div class="bar-fill fill-lstm" style="width: 84.2%"></div></div>
+                        <div class="bar-container" style="margin-top: 4px;"><div class="bar-fill fill-bert" style="width: 88.2%"></div></div>
+                    </div>
+                    <div class="stat-value">
+                        <div class="val-lstm">84.2%</div>
+                        <div class="val-bert">88.2%</div>
+                    </div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-label">F1-Score</div>
+                    <div class="stat-bars">
+                        <div class="bar-container"><div class="bar-fill fill-lstm" style="width: 84.3%"></div></div>
+                        <div class="bar-container" style="margin-top: 4px;"><div class="bar-fill fill-bert" style="width: 88.3%"></div></div>
+                    </div>
+                    <div class="stat-value">
+                        <div class="val-lstm">0.843</div>
+                        <div class="val-bert">0.883</div>
+                    </div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-label">ROC-AUC</div>
+                    <div class="stat-bars">
+                        <div class="bar-container"><div class="bar-fill fill-lstm" style="width: 90.1%"></div></div>
+                        <div class="bar-container" style="margin-top: 4px;"><div class="bar-fill fill-bert" style="width: 94.2%"></div></div>
+                    </div>
+                    <div class="stat-value">
+                        <div class="val-lstm">0.901</div>
+                        <div class="val-bert">0.942</div>
+                    </div>
+                </div>
+
+                <div class="chat-box">
+                    [cite_start]<div style="font-size: 0.8rem; color: #fbbf24; margin-bottom: 5px; font-weight: 700;">THE SARCASM TEST [cite: 1327]</div>
+                    <div class="review-text">"Just what I needed... a broken lid."</div>
+                    <div class="prediction">
+                        <span style="color: var(--lstm-color)"><i class="fas fa-times-circle"></i> LSTM: Positive</span>
+                        <span style="color: var(--bert-color)"><i class="fas fa-check-circle"></i> BERT: Negative</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+                [cite_start]<h3 style="text-align: center; margin-bottom: 1rem;">The Deployment Trade-off [cite: 1358]</h3>
+                <div style="height: 300px;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <p style="text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 15px;">
+                    <span style="color: var(--bert-color)">● BERT</span> excels in accuracy. <span style="color: var(--lstm-color)">● LSTM</span> excels in speed & memory.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">Workflow <span>Comparison</span></h2>
+        <div class="grid-2 fade-in delay-2">
+            
+            <div class="card arch-card">
+                <span class="model-tag tag-lstm">Sequential</span>
+                <h3>LSTM Workflow</h3>
+                [cite_start]<p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Step-by-step processing [cite: 1165]</p>
+                <img src="assets/fig3_lstm_workflow.png" alt="LSTM Diagram" class="arch-img">
+            </div>
+
+            <div class="card arch-card">
+                <span class="model-tag tag-bert">Attention</span>
+                <h3>BERT Workflow</h3>
+                [cite_start]<p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Bidirectional Context [cite: 1215]</p>
+                <img src="assets/fig4_bert_workflow.png" alt="BERT Diagram" class="arch-img">
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Research by Khan, Khalid, Ibad, Khan, & Malik.</p>
+        <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.6;">Published in International Journal of Information Security and Cybercrime Technology</p>
+    </footer>
+
+    <script>
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        
+        // Gradient for BERT
+        let gradientBert = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientBert.addColorStop(0, 'rgba(244, 63, 94, 0.5)');
+        gradientBert.addColorStop(1, 'rgba(244, 63, 94, 0.1)');
+
+        // Gradient for LSTM
+        let gradientLstm = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientLstm.addColorStop(0, 'rgba(6, 182, 212, 0.5)');
+        gradientLstm.addColorStop(1, 'rgba(6, 182, 212, 0.1)');
+
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Accuracy', 'Inference Speed', 'Training Speed', 'Memory Efficiency', 'Negation Handling'],
+                datasets: [
+                    {
+                        label: 'LSTM',
+                        data: [70, 95, 90, 95, 60], // High efficiency, lower accuracy
+                        backgroundColor: gradientLstm,
+                        borderColor: '#06b6d4',
+                        pointBackgroundColor: '#06b6d4',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'BERT',
+                        data: [95, 40, 30, 30, 90], // High accuracy, low efficiency
+                        backgroundColor: gradientBert,
+                        borderColor: '#f43f5e',
+                        pointBackgroundColor: '#f43f5e',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        pointLabels: {
+                            color: '#94a3b8',
+                            font: { size: 12, family: 'Outfit' }
+                        },
+                        ticks: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: '#f8fafc', font: { family: 'Outfit' } }
+                    }
+                }
+            }
+        });
+
+        // Intersection Observer for Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
